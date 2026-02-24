@@ -142,6 +142,15 @@
   .topic-insight { background: var(--grey-100); border-radius: 6px; padding: 8px 12px; margin-top: 6px; font-size: 11px; color: var(--grey-700); line-height: 1.45; }
   .topic-insight .insight-tag { font-size: 9px; }
 
+  .tldr-section { background: var(--white); border-radius: 12px; padding: 22px 26px; border: 1px solid var(--grey-200); margin-bottom: 16px; }
+  .tldr-section h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; color: var(--grey-900); display: flex; align-items: center; gap: 8px; }
+  .tldr-section p { font-size: 13px; color: var(--grey-700); line-height: 1.6; }
+  .tldr-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .tldr-dot.green { background: var(--green); }
+  .tldr-dot.amber { background: var(--amber); }
+  .tldr-dot.red { background: var(--red); }
+  .tldr-dot.blue { background: var(--blue); }
+
   @media (max-width: 900px) {
     .kpi-row { grid-template-columns: repeat(2, 1fr); }
     .two-col, .three-col { grid-template-columns: 1fr; }
@@ -165,7 +174,8 @@
 </div>
 
 <div class="nav-tabs">
-  <div class="nav-tab active" onclick="switchTab('overview', this)">Overview</div>
+  <div class="nav-tab active" onclick="switchTab('tldr', this)">Weekly TLDR</div>
+  <div class="nav-tab" onclick="switchTab('overview', this)">Overview</div>
   <div class="nav-tab" onclick="switchTab('citations', this)">Citations & Sources</div>
   <div class="nav-tab" onclick="switchTab('competition', this)">Competition</div>
   <div class="nav-tab" onclick="switchTab('gaps', this)">Gaps</div>
@@ -173,8 +183,31 @@
 
 <div class="content">
 
+  <!-- ===================== TAB 0: WEEKLY TLDR ===================== -->
+  <div id="tab-tldr" class="tab-content active">
+
+    <div class="week-nav">
+      <button class="week-nav-btn" id="prevWeekBtn2" onclick="navigateWeek(-1)"><span>&#8592;</span> Previous</button>
+      <div class="week-nav-center">
+        <div class="week-nav-date" id="weekDateDisplay2"></div>
+        <div class="week-nav-range" id="weekRangeDisplay2"></div>
+      </div>
+      <button class="week-nav-btn" id="nextWeekBtn2" onclick="navigateWeek(1)">Next <span>&#8594;</span></button>
+    </div>
+
+    <div id="tldrContent"></div>
+
+    <div class="card full-card" style="margin-top: 20px; border-left: 4px solid var(--beetroot);">
+      <h3 style="margin-bottom: 6px;">Action Tracker</h3>
+      <p style="font-size: 13px; color: var(--grey-700); margin-bottom: 10px;">Tracking what's in progress and planned based on these insights.</p>
+      <a href="https://docs.google.com/document/d/1WTBhqKbCxqB3bMUAWSZeNL8i0iFLARa8QbIyaFnHv_k/edit?tab=t.wk59pwlk5kor" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: var(--beetroot); color: var(--white); border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; transition: background 0.2s;">
+        View Action Tracker &rarr;
+      </a>
+    </div>
+  </div>
+
   <!-- ===================== TAB 1: OVERVIEW ===================== -->
-  <div id="tab-overview" class="tab-content active">
+  <div id="tab-overview" class="tab-content">
 
     <div class="week-nav">
       <button class="week-nav-btn" id="prevWeekBtn" onclick="navigateWeek(-1)"><span>&#8592;</span> Previous</button>
@@ -374,7 +407,7 @@ const weekData = [
         'ChatGPT': { rokt: 65.4, fluent: null, uptick: null, thanksCo: null },
         'Microsoft Copilot': { rokt: 61.3, fluent: null, uptick: null, thanksCo: null }
       },
-      fluentSpillover: { 'Rokt Product': 11, 'ITL': 18, 'Persona-Led': 4, 'Rokt Aftersell': 3, 'Rokt Ads': 1 },
+      fluentSpillover: { 'Rokt Product': 11, 'Industry Thought Leadership': 18, 'Persona-Led': 4, 'Rokt Aftersell': 3, 'Rokt Ads': 1 },
       uptickSpillover: { 'Rokt Product': 1, 'Rokt Aftersell': 1 },
       thanksCoSpillover: {}
     },
@@ -470,7 +503,7 @@ const weekData = [
         'Rokt Thanks': { rokt: 72.3, fluent: 63.2, uptick: 71.2, thanksCo: 80.9 },
         'Rokt Catalog': { rokt: 76.1, fluent: 58.2, uptick: 63.9, thanksCo: 66.7 },
         'Rokt Aftersell': { rokt: 77.8, fluent: 53.8, uptick: 64.9, thanksCo: 73.9 },
-        'ITL': { rokt: 80.5, fluent: 75.7, uptick: 56.7, thanksCo: 39.4 }
+        'Industry Thought Leadership': { rokt: 80.5, fluent: 75.7, uptick: 56.7, thanksCo: 39.4 }
       },
       themes: {
         rokt: ['Integration Complexity','Pricing Transparency','Ecosystem Dependence','Implementation Complexity','Privacy & Data Concerns'],
@@ -478,12 +511,12 @@ const weekData = [
         uptick: ['Integration Complexity','Narrow Scope','Limited Reviews','Not Full-Funnel'],
         thanksCo: ['Limited Reviews','Platform Dependency','Lack of Information','Low Trust Score']
       },
-      fluentSpillover: { 'Rokt Product': 26, 'ITL': 15, 'Persona-Led': 9, 'Rokt Aftersell': 9, 'Rokt Ads': 4 },
-      uptickSpillover: { 'ITL': 2, 'Rokt Product': 1, 'Rokt Catalog': 1, 'Rokt Aftersell': 1 },
+      fluentSpillover: { 'Rokt Product': 26, 'Industry Thought Leadership': 15, 'Persona-Led': 9, 'Rokt Aftersell': 9, 'Rokt Ads': 4 },
+      uptickSpillover: { 'Industry Thought Leadership': 2, 'Rokt Product': 1, 'Rokt Catalog': 1, 'Rokt Aftersell': 1 },
       thanksCoSpillover: { 'Rokt Catalog': 1, 'Rokt Thanks': 1 },
       sovByTopic: {
         'Persona-Led': { rokt: 0.85, fluent: 1.66, uptick: 0, thanksCo: 0 },
-        'ITL': { rokt: 0.60, fluent: 0.16, uptick: 0.09, thanksCo: 0 }
+        'Industry Thought Leadership': { rokt: 0.60, fluent: 0.16, uptick: 0.09, thanksCo: 0 }
       }
     },
     lowSentiment: [
@@ -495,7 +528,7 @@ const weekData = [
     insights: {
       overview: [
         { tag: 'platform', label: 'Platform', text: 'Google AI Overviews is the breakout — unbranded mentions up +227%. Total non-branded mentions rose +40% across all 8 platforms.' },
-        { tag: 'sentiment', label: 'Sentiment', text: 'Positive sentiment flat at 68.7%. Perplexity had the biggest drop (-5.3pp). Copilot is the most negative platform at 61.3% positive.' }
+        { tag: 'sentiment', label: 'Sentiment', text: 'Positive sentiment flat at 68.7%. Perplexity had the biggest drop (-5.3pp). Copilot has the lowest positive sentiment of any platform (61.3%) — nearly 4 in 10 Copilot mentions frame Rokt negatively.' }
       ],
       citations: {
         pieChart: { tag: 'citation', label: 'Citation', text: 'Owned content up to 21.5% of citations (+1.7pp). Competition share dropped from 2.0% to 1.8% — Rokt is gaining relative to competitors in citation coverage.' },
@@ -509,11 +542,27 @@ const weekData = [
         spillover: { tag: 'competition', label: 'Competition', text: 'Fluent is expanding aggressively outside Competitive: Rokt Product (+136%), Persona-Led (+125%), Aftersell (+200%). They also beat Rokt on Persona-Led SOV (1.66% vs 0.85%).' }
       },
       gaps: [
-        { tag: 'gap', label: 'Gap', text: 'ITL is Rokt\'s weakest topic at 0.6% SOV. rokt.com is 6th in ITL citations — behind LinkedIn, Forbes, BigCommerce, McKinsey, and Bloomreach.' },
+        { tag: 'gap', label: 'Gap', text: 'Industry Thought Leadership is Rokt\'s weakest topic at 0.6% SOV. rokt.com is 6th in Industry Thought Leadership citations — behind LinkedIn, Forbes, BigCommerce, McKinsey, and Bloomreach.' },
         { tag: 'gap', label: 'Gap', text: 'Rokt\'s top negative themes — Integration Complexity, Pricing Transparency, Ecosystem Dependence — are fixable with targeted content addressing these objections.' }
       ]
     }
   }
+];
+
+// TLDR per week
+const weekTLDR = [
+  // Week 0: Baseline
+  [
+    { color: 'blue', title: 'Baseline Week', text: 'This is the first week of tracking. All metrics serve as the baseline for future comparisons. Product-specific queries were only added in the last 3 days of this period, so those topics show 0% visibility.' }
+  ],
+  // Week 1: Feb 16
+  [
+    { color: 'green', title: 'Branded queries are strong', text: 'Rokt holds the #1 average position and 46% citation share when someone asks an AI about Rokt by name. rokt.com is the dominant source AI models cite, and owned content is growing as a share of total citations. No action needed here — this is a defend-and-maintain position.' },
+    { color: 'amber', title: 'Non-branded is where the growth opportunity lives', text: 'Visibility dipped slightly this week, but total AI mentions of Rokt across non-branded queries grew 40%. The market for AI-generated answers is expanding fast — the challenge is growing our share faster than the market. Google AI Overviews was the biggest driver of new mentions this week.' },
+    { color: 'amber', title: 'Competitors are small but Fluent is moving', text: 'Rokt leads all competitors by a wide margin on share of voice in competitive queries. However, Fluent is the one to watch — they\'re expanding into Rokt Product, Persona-Led, and Aftersell queries at a rate that outpaces their overall size, and they already hold more share of voice than Rokt on Persona-Led queries.' },
+    { color: 'red', title: 'Sentiment has platform and topic blind spots', text: 'Overall sentiment is stable, but Copilot has the lowest positive sentiment of any platform — nearly 4 in 10 mentions frame Rokt negatively there. By topic, Culture is where Rokt is weakest — all three competitors score higher. Uptick in particular beats Rokt on sentiment across several product topics.' },
+    { color: 'blue', title: 'Content gaps are actionable', text: 'The most common criticisms AI models surface about Rokt — integration complexity, pricing transparency, and ecosystem dependence — all point to content we can create. Industry Thought Leadership remains the weakest topic by share of voice, and rokt.com is outranked by five other domains in Industry Thought Leadership citations.' }
+  ]
 ];
 
 let currentWeekIdx = weekData.length - 1;
@@ -578,6 +627,23 @@ function renderWeekNav() {
     dots.appendChild(d);
   });
   document.getElementById('lastUpdated').textContent = 'Last updated: ' + weekData[weekData.length - 1].weekOf;
+  // Sync TLDR week nav
+  document.getElementById('weekDateDisplay2').textContent = week.weekOf;
+  document.getElementById('weekRangeDisplay2').textContent = rangeText;
+  document.getElementById('prevWeekBtn2').disabled = (currentWeekIdx === 0);
+  document.getElementById('nextWeekBtn2').disabled = (currentWeekIdx === weekData.length - 1);
+}
+
+function renderTLDR() {
+  const items = weekTLDR[currentWeekIdx] || [];
+  const el = document.getElementById('tldrContent');
+  if (!items.length) { el.innerHTML = '<div class="tldr-section"><p style="color:var(--grey-400)">No TLDR available for this week.</p></div>'; return; }
+  el.innerHTML = items.map(item => `
+    <div class="tldr-section">
+      <h3><span class="tldr-dot ${item.color}"></span>${item.title}</h3>
+      <p>${item.text}</p>
+    </div>
+  `).join('');
 }
 
 function navigateWeek(dir) {
@@ -822,8 +888,8 @@ function renderGaps() {
   // Low Performing Topics — table with SOV bar, flags, and inline insights
   const lpTable = document.getElementById('lowPerformingTable');
   const lowTopics = [
-    { name: 'Industry Thought Leadership', sov: 0.6, sentiment: 80.5, flags: ['flag-sov'], flagLabels: ['Low SOV'], note: 'rokt.com is 6th in ITL citations — behind LinkedIn, Forbes, BigCommerce, McKinsey, Bloomreach',
-      insight: { tag: 'gap', label: 'Gap', text: 'ITL is Rokt\'s weakest topic at 0.6% SOV. This is the biggest category growth opportunity — Rokt needs thought leadership content that AI models will reference.' } },
+    { name: 'Industry Thought Leadership', sov: 0.6, sentiment: 80.5, flags: ['flag-sov'], flagLabels: ['Low SOV'], note: 'rokt.com is 6th in Industry Thought Leadership citations — behind LinkedIn, Forbes, BigCommerce, McKinsey, Bloomreach',
+      insight: { tag: 'gap', label: 'Gap', text: 'Industry Thought Leadership is Rokt\'s weakest topic at 0.6% SOV. This is the biggest category growth opportunity — Rokt needs thought leadership content that AI models will reference.' } },
     { name: 'Persona-Led', sov: 0.85, sentiment: 67.3, flags: ['flag-sov','flag-competition'], flagLabels: ['Low SOV','Fluent ahead'], note: 'Fluent beats Rokt on SOV (1.66% vs 0.85%). Only 586 mentions total.',
       insight: { tag: 'competition', label: 'Competition', text: 'Fluent owns more AI share of voice than Rokt in Persona-Led queries (1.66% vs 0.85%). Google AI Overviews barely surfaces Rokt here (32 mentions).' } },
     { name: 'Rokt Product', sov: 9.7, sentiment: 68.8, flags: ['flag-sentiment'], flagLabels: ['Low sentiment'], note: '16,567 mentions (highest volume) but only 68.8% positive. Room to improve at scale.',
@@ -860,7 +926,7 @@ function renderGaps() {
   const cgTable = document.getElementById('contentGapsTable');
   const gaps = [
     { theme: 'Integration Complexity', occ: '9 negative mentions', action: 'Create "How to integrate Rokt in under 30 min" content — counter the complexity narrative with step-by-step guides and time-to-value stories' },
-    { theme: 'Pricing Transparency', occ: '5 negative mentions', action: 'Publish pricing framework or ROI calculator — AI models cite pricing concerns because no public content addresses it' },
+    { theme: 'Pricing Transparency', occ: '5 negative mentions', action: 'Publish pricing framework — AI models cite pricing concerns because no public content addresses it' },
     { theme: 'Ecosystem Dependence', occ: '3 negative mentions', action: 'Highlight platform-agnostic capabilities and open API integrations in product content' },
     { theme: 'Limited Independent Reviews', occ: 'Across all competitors', action: 'Encourage G2/Capterra reviews — Uptick and ThanksCo also flagged for this. More reviews = better AI positioning' },
     { theme: 'Privacy & Data Concerns', occ: '3 negative mentions', action: 'Create dedicated privacy/compliance content that AI models can cite when asked about data practices' }
@@ -964,6 +1030,7 @@ function switchTab(tabName, el) {
 function updateAll() {
   const week = weekData[currentWeekIdx];
   renderWeekNav();
+  renderTLDR();
   renderKPI('kpiBranded', week.branded, brandedConfigs);
   renderBrandedPosition();
   renderKPI('kpiUnbranded', week.unbranded, unbrandedConfigs);
