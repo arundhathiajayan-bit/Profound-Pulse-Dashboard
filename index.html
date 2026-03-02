@@ -272,6 +272,15 @@
   <!-- ===================== TAB 2: CITATIONS ===================== -->
   <div id="tab-citations" class="tab-content">
 
+    <div class="week-nav">
+      <button class="week-nav-btn" id="prevWeekBtn3" onclick="navigateWeek(-1)"><span>&#8592;</span> Previous</button>
+      <div class="week-nav-center">
+        <div class="week-nav-date" id="weekDateDisplay3"></div>
+        <div class="week-nav-range" id="weekRangeDisplay3"></div>
+      </div>
+      <button class="week-nav-btn" id="nextWeekBtn3" onclick="navigateWeek(1)">Next <span>&#8594;</span></button>
+    </div>
+
     <div class="section-title">Citation Share Breakdown</div>
     <p style="font-size: 13px; color: var(--grey-700); margin: -8px 0 20px;">How AI models cite and reference Rokt content across answer engines</p>
 
@@ -306,6 +315,15 @@
 
   <!-- ===================== TAB 3: COMPETITION ===================== -->
   <div id="tab-competition" class="tab-content">
+
+    <div class="week-nav">
+      <button class="week-nav-btn" id="prevWeekBtn4" onclick="navigateWeek(-1)"><span>&#8592;</span> Previous</button>
+      <div class="week-nav-center">
+        <div class="week-nav-date" id="weekDateDisplay4"></div>
+        <div class="week-nav-range" id="weekRangeDisplay4"></div>
+      </div>
+      <button class="week-nav-btn" id="nextWeekBtn4" onclick="navigateWeek(1)">Next <span>&#8594;</span></button>
+    </div>
 
     <div class="section-title">Share of Voice — Competitive Topic</div>
     <div class="card full-card">
@@ -347,6 +365,15 @@
 
   <!-- ===================== TAB 4: GAPS ===================== -->
   <div id="tab-gaps" class="tab-content">
+
+    <div class="week-nav">
+      <button class="week-nav-btn" id="prevWeekBtn5" onclick="navigateWeek(-1)"><span>&#8592;</span> Previous</button>
+      <div class="week-nav-center">
+        <div class="week-nav-date" id="weekDateDisplay5"></div>
+        <div class="week-nav-range" id="weekRangeDisplay5"></div>
+      </div>
+      <button class="week-nav-btn" id="nextWeekBtn5" onclick="navigateWeek(1)">Next <span>&#8594;</span></button>
+    </div>
 
     <div class="section-title">Low Performing Topics</div>
     <p style="font-size: 13px; color: var(--grey-700); margin: -8px 0 20px;">Topics where Rokt underperforms — flagged by low SOV, declining sentiment, or competitive losses</p>
@@ -753,11 +780,17 @@ function renderWeekNav() {
     dots.appendChild(d);
   });
   document.getElementById('lastUpdated').textContent = 'Last updated: ' + weekData[weekData.length - 1].weekOf;
-  // Sync TLDR week nav
-  document.getElementById('weekDateDisplay2').textContent = week.weekOf;
-  document.getElementById('weekRangeDisplay2').textContent = rangeText;
-  document.getElementById('prevWeekBtn2').disabled = (currentWeekIdx === 0);
-  document.getElementById('nextWeekBtn2').disabled = (currentWeekIdx === weekData.length - 1);
+  // Sync all tab week navs
+  [2, 3, 4, 5].forEach(n => {
+    const dt = document.getElementById('weekDateDisplay' + n);
+    const rn = document.getElementById('weekRangeDisplay' + n);
+    const pb = document.getElementById('prevWeekBtn' + n);
+    const nb = document.getElementById('nextWeekBtn' + n);
+    if (dt) dt.textContent = week.weekOf;
+    if (rn) rn.textContent = rangeText;
+    if (pb) pb.disabled = (currentWeekIdx === 0);
+    if (nb) nb.disabled = (currentWeekIdx === weekData.length - 1);
+  });
 }
 
 function renderTLDR() {
